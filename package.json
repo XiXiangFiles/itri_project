@@ -1,0 +1,23 @@
+{
+  "name": "itri",
+  "version": "1.0.0",
+  "description": "",
+  "main": "getSensor.js",
+  "dependencies": {
+    "node-sense-hat": "^0.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XiXiangFiles/itri_project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XiXiangFiles/itri_project/issues"
+  },
+  "homepage": "https://github.com/XiXiangFiles/itri_project#readme"
+}
