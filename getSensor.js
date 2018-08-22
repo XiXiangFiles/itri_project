@@ -1,28 +1,36 @@
-const imu = require('node-sense-hat').Imu;
-const IMU = new imu.IMU();
 const serial = require('serialport');
-
+const sensor= require("node-dht-sensor");
 
 function main(){
 	let obj={};
-	let port = new serial('/dev/serial/by-id/usb-u-blox_AG_-_www.u-blox.com_u-blox_7_-_GPS_GNSS_Receiver-if00',{
-		 baudRate: 9600
+	let port = new serial('/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0',{
+		 baudRate: 4800
 	});
+	let buf="";
 	port.on('data',function(data){
-		//console.log(data.toString('ascii'));
-		obj.gps=data.toString('ascii');	
+		if(data=='$'){
+		
+			if(buf.includes("$GPGGA")){
+				//console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~"+buf);
+				let str;
+				let gps={};
+				str=buf.split(',');
+				gps.lat=parseFloat(str[2])/100;
+				gps.lng=parseFloat(str[4])/100;
+				obj.gps=gps;
+			}
+			buf="";
+		}
+
+		buf += data.toString('ascii');
+	
 		
 	});
 	setInterval(function(){
-		IMU.getValue(function(err,data){
-				if(err!=null){
-					console.log("failed to get data");
-					return ;
-				}
-				obj.temperature=data.temperature;
-				console.log(obj);
+		sensor.read(11, 21, function(err, temperature, humidity){
+			obj.temperature=temperature;
 		});
-	
+		console.log(obj);
 	},1000);
 }
 main();
