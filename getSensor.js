@@ -1,7 +1,7 @@
 const serial = require('serialport');
 const sensor= require("node-dht-sensor");
 const request=require('request');
-
+const fs=require('fs');
 function main(){
 	let obj={};
 	let port = new serial('/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0',{
@@ -12,7 +12,6 @@ function main(){
 		if(data=='$'){
 		
 			if(buf.includes("$GPGGA")){
-				//console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~"+buf);
 				let str;
 				let gps={};
 				str=buf.split(',');
@@ -28,16 +27,33 @@ function main(){
 		
 	});
 	setInterval(function(){
+		let str;
+		var dateTime = require('node-datetime');
+		var dt = dateTime.create();
+		var formatted = dt.format('Y-m-d H:M:S');
+		require('getmac').getMac({iface: 'wlan0'}, function(err, macAddress){
+			obj.mac=macAddress;
+		});
+
 		sensor.read(11, 21, function(err, temperature, humidity){
 			obj.temperature=temperature;
+			obj.humidity=humidity;
 		});
-		console.log(obj);
-		request.post({
-			url:"http://192.168.4.206/test.php",
-			form:{test:"test"}
-		},function(err,res,body){
-			console.log(body);		
-		});
+		if(obj.temperature!==undefined && obj.gps!==undefined){
+			str=obj.mac+","+formatted+","+obj.temperature+","+obj.humidity+","+obj.gps.lat+","+obj.gps.lng+","+"test\n";
+			fs.appendFile('sensorDate.csv', str, function (err) {
+				if (err) throw err;
+					 console.log('Saved!');
+			});
+		/*	
+		 *
+		 *	這裡開始寫區塊練合約
+		 *	
+		 *
+		 *
+		 *
+		 *	*/
+		}
 	},1000);
 }
 main();
