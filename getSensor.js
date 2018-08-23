@@ -1,5 +1,6 @@
 const serial = require('serialport');
 const sensor= require("node-dht-sensor");
+const request=require('request');
 
 function main(){
 	let obj={};
@@ -31,6 +32,12 @@ function main(){
 			obj.temperature=temperature;
 		});
 		console.log(obj);
+		request.post({
+			url:"http://192.168.4.206/test.php",
+			form:{test:"test"}
+		},function(err,res,body){
+			console.log(body);		
+		});
 	},1000);
 }
 main();
