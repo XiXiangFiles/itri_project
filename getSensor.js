@@ -28,9 +28,9 @@ function main(){
 	});
 	setInterval(function(){
 		let str;
-		var dateTime = require('node-datetime');
-		var dt = dateTime.create();
-		var formatted = dt.format('Y-m-d H:M:S');
+		let dateTime = require('node-datetime');
+		let dt = dateTime.create();
+		let formatted = dt.format('Y-m-d H:M:S');
 		require('getmac').getMac({iface: 'wlan0'}, function(err, macAddress){
 			obj.mac=macAddress;
 		});
@@ -47,7 +47,7 @@ function main(){
 			});
 		/*	
 		 *
-		 *	這裡開始寫區塊練合約
+		 *	這裡開始寫區塊鍊合約
 		 *	
 		 *
 		 *
