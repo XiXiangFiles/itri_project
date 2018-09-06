@@ -31,6 +31,7 @@ function main(){
 		let dateTime = require('node-datetime');
 		let dt = dateTime.create();
 		let formatted = dt.format('Y-m-d H:M:S');
+		obj.timestamp=formatted;
 		require('getmac').getMac({iface: 'wlan0'}, function(err, macAddress){
 			obj.mac=macAddress;
 		});
@@ -46,6 +47,7 @@ function main(){
 				if (err) throw err;
 					 console.log('Saved!');
 			});
+			console.log(obj);
 			request.post({url:"http://192.168.4.204:3000/save", form: {data:JSON.stringify(obj)}}, function(err,httpResponse,body){ 
 				console.log(obj);
 			})
@@ -53,6 +55,6 @@ function main(){
 			//request.post("http://192.168.4.204:3000/save").form(obj);
 		}
 	
-	},1000);
+	},5000);
 }
 main();
