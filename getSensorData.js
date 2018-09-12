@@ -47,6 +47,9 @@ function main(){
 				if (err) throw err;
 					 console.log('Saved!');
 			});
+			obj.Id="test";
+			obj.Contract_Address="test";
+			obj.Transaction_Hash="test";
 			console.log(obj);
 			request.post({url:"http://192.168.4.204:3000/save", form: {data:JSON.stringify(obj)}}, function(err,httpResponse,body){ 
 				console.log(obj);

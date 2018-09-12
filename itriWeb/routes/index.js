@@ -5,7 +5,7 @@ const mysql=require('mysql');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	console.log(req.query);
+	// console.log(req.query);
 	let conn=mysql.createConnection({
 		host:"127.0.0.1",
 		user:"pi",
@@ -17,7 +17,6 @@ router.get('/', function(req, res, next) {
 		console.log(req.query.id);
 		if(!err){
 			if(req.query.id != undefined && req.query.id != ""){
-				console.log("進去"+req.query.id);
 				let sql=`SELECT * FROM container WHERE pi_mac = '${req.query.id}'`;
 				conn.query(sql,function(err,ressql){
 					if(!err){
@@ -28,7 +27,6 @@ router.get('/', function(req, res, next) {
 				});
 			}
 			else{
-				console.log("沒有進去"+req.query.id);
 				let sql="SELECT * FROM `container` WHERE 1";
 				conn.query(sql,function(err,ressql){
 					if(!err){
@@ -38,6 +36,7 @@ router.get('/', function(req, res, next) {
 					}	
 				});
 			}
+			conn.end();
 
 		}
 		
@@ -46,7 +45,7 @@ router.get('/', function(req, res, next) {
 	//res.render('index', { title: 'Express' });
 });
 
-router.post("/save",function(req,res){
+router.post("/save",function(req,response){
 
 	let data=JSON.parse(req.body.data);
 
@@ -61,21 +60,28 @@ router.post("/save",function(req,res){
 		if(!err){
 			let sql="";
 			if(data.mac != undefined && data.gps != undefined && data.temperature != undefined && data.humidity != undefined && data.info != undefined)
-				sql="INSERT INTO `container`(`pi_mac`,`timestamp`, `lat`, `lng`, `temperature`, `humidity`, `info`) VALUES ('"+data.mac+"','"+data.timestamp+"','"+data.gps.lat+"','"+data.gps.lng+"','"+data.temperature+"','"+data.humidity+"','"+data.info+"')";
+				sql="INSERT INTO `container`(`pi_mac`, `timestamp` ,`lat`, `lng`, `temperature`, `humidity`,`Id`,`Contract_Address`,`Transaction_Hash`,`info`) VALUES ('"+data.mac+"','"+data.timestamp+"','"+data.gps.lat+"','"+data.gps.lng+"','"+data.temperature+"','"+data.humidity+"','"+data.Id+"','"+data.Contract_Address+"','"+data.Transaction_Hash+"','"+data.info+"')";
 				
 			console.log("sql= "+sql);
 			conn.query(sql,function(err,res){
-				
+				if(err){
+					response.write("false");
+					response.end();
+				}else{
+					response.write('true');
+					response.end();
+				}
 			});
 		
 		}else{
 			console.log(err);
 		}
+		conn.end();
 	});
 });
 
 router.get('/getDataByIdTime', function(req, res, next) {
-	console.log(req.query);
+	// console.log(req.query);
 	let conn=mysql.createConnection({
 		host:"127.0.0.1",
 		user:"pi",
@@ -96,6 +102,7 @@ router.get('/getDataByIdTime', function(req, res, next) {
 				else{
 					console.log(err);
 				}
+				conn.end();
 			});
 
 		}
